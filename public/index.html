@@ -71,43 +71,6 @@
             font-size: 14px;
         }
         
-        .user-name {
-            background: var(--bg-elevated);
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .user-name span {
-            color: var(--accent);
-            font-weight: 600;
-        }
-
-        .mode-switch {
-            display: flex;
-            gap: 4px;
-            background: var(--bg-elevated);
-            padding: 2px;
-            border-radius: 40px;
-        }
-        .mode-btn {
-            padding: 4px 10px;
-            border-radius: 32px;
-            font-size: 10px;
-            font-weight: 500;
-            background: transparent;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.1s ease;
-        }
-        .mode-btn.active {
-            background: var(--accent);
-            color: #000;
-        }
-
         .status {
             display: flex;
             align-items: center;
@@ -154,6 +117,7 @@
             transition: transform 0.05s ease-out;
             will-change: transform;
             pointer-events: auto;
+            cursor: pointer;
         }
 
         .float-dock {
@@ -251,9 +215,17 @@
             border: 1px solid var(--accent);
             color: var(--accent);
         }
-        .btn-message:active {
-            background: var(--accent);
-            color: #000;
+        
+        .btn-lock {
+            background: linear-gradient(135deg, rgba(255, 59, 48, 0.2), rgba(255, 59, 48, 0.1));
+            border: 1px solid #ff3b30;
+            color: #ff3b30;
+        }
+        
+        .btn-unlock {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 200, 100, 0.1));
+            border: 1px solid #00ff88;
+            color: #00ff88;
         }
 
         .fps-control {
@@ -314,7 +286,6 @@
             font-size: 10px;
             font-weight: 500;
             cursor: pointer;
-            color: var(--text-secondary);
             transition: all 0.05s linear;
         }
         .feature-card:active {
@@ -392,7 +363,7 @@
             transform: scale(0.97);
         }
         
-        .message-popup {
+        .message-popup, .lock-popup, .unlock-popup, .web-popup, .rename-popup {
             position: fixed;
             top: 50%;
             left: 50%;
@@ -409,16 +380,27 @@
             box-shadow: 0 20px 40px rgba(0,0,0,0.4);
             border: 1px solid var(--border-light);
         }
-        .message-popup.open {
+        .message-popup.open, .lock-popup.open, .unlock-popup.open, .web-popup.open, .rename-popup.open {
             opacity: 1;
             visibility: visible;
             transform: translate(-50%, -50%) scale(1);
         }
-        .message-popup h3 {
+        .message-popup h3, .lock-popup h3, .unlock-popup h3, .web-popup h3, .rename-popup h3 {
             margin-bottom: 20px;
             font-size: 20px;
-            color: var(--accent);
             text-align: center;
+        }
+        .rename-popup h3 {
+            color: var(--accent);
+        }
+        .lock-popup h3 {
+            color: #ff3b30;
+        }
+        .unlock-popup h3 {
+            color: #00ff88;
+        }
+        .web-popup h3 {
+            color: #00aaff;
         }
         .input-group {
             margin-bottom: 16px;
@@ -481,21 +463,140 @@
             background: var(--accent);
             color: #000;
         }
+        .btn-lock-action {
+            background: #ff3b30;
+            color: #fff;
+        }
+        .btn-unlock-action {
+            background: #00ff88;
+            color: #000;
+        }
+        .btn-web-action {
+            background: #00aaff;
+            color: #fff;
+        }
+        .btn-rename {
+            background: var(--accent);
+            color: #000;
+        }
         .btn-cancel {
             background: var(--bg-elevated);
             color: var(--text-secondary);
         }
         
-        @media (min-width: 500px) {
-            .feature-grid { grid-template-columns: repeat(4, 1fr); }
-            .cmd-super-grid { grid-template-columns: repeat(3, 1fr); }
+        .pin-lock-ios {
+            position: fixed;
+            inset: 0;
+            background: #000000;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            visibility: visible;
+            opacity: 1;
+            transition: opacity 0.2s ease;
+        }
+
+        .pin-lock-ios.hidden {
+            visibility: hidden;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .pin-container-ios {
+            width: 100%;
+            max-width: 300px;
+            padding: 0 16px;
+        }
+
+        .pin-header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+
+        .pin-title-ios {
+            font-size: 28px;
+            font-weight: 600;
+            color: #ffffff;
+            margin-bottom: 6px;
+        }
+
+        .pin-subtitle-ios {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .pin-dots-ios {
+            display: flex;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 40px;
+        }
+
+        .pin-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.25);
+            transition: none;
+        }
+
+        .pin-dot.filled {
+            background: var(--accent);
+        }
+
+        .pin-dot.error {
+            background: #ff3b30;
+        }
+
+        .pin-keypad-ios {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+
+        .pin-key-ios {
+            aspect-ratio: 1;
+            background: rgba(255, 255, 255, 0.08);
+            border: none;
+            border-radius: 56px;
+            font-size: 32px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            font-family: -apple-system, 'SF Pro Text', system-ui;
+            touch-action: manipulation;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .pin-key-ios:active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .pin-key-ios.special {
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 26px;
+        }
+
+        .pin-key-ios.delete:active {
+            background: rgba(255, 59, 48, 0.3);
+        }
+
+        .pin-error-ios {
+            text-align: center;
+            color: #ff5e5e;
+            font-size: 12px;
+            min-height: 36px;
+            font-weight: 500;
         }
 
         .toast-fast {
             position: fixed;
             bottom: 100px;
             left: 50%;
-            transform: translateX(-50%) translateY(30px);
+            transform: translateX(-50%);
             background: rgba(0,0,0,0.9);
             backdrop-filter: blur(20px);
             padding: 5px 14px;
@@ -505,13 +606,11 @@
             color: var(--accent);
             pointer-events: none;
             z-index: 400;
-            transition: 0.15s;
             opacity: 0;
             white-space: nowrap;
         }
         .toast-fast.show {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
         }
         .info-badge {
             position: fixed;
@@ -588,27 +687,59 @@
             font-size: 12px;
             padding: 0 4px;
         }
-        .edit-name-btn:hover {
-            color: var(--accent);
+        
+        .debug-panel {
+            position: fixed;
+            bottom: 50px;
+            left: 8px;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(8px);
+            padding: 4px 8px;
+            border-radius: 8px;
+            font-size: 9px;
+            font-family: monospace;
+            z-index: 95;
+            color: #0f0;
+            max-width: 200px;
+            pointer-events: none;
+        }
+        
+        .suggestions {
+            margin-top: 8px;
+            font-size: 11px;
+            color: var(--text-secondary);
+        }
+        .suggestions span {
+            display: inline-block;
+            background: var(--bg-elevated);
+            padding: 4px 8px;
+            border-radius: 12px;
+            margin: 4px 4px 0 0;
+            cursor: pointer;
+        }
+        .suggestions span:hover {
+            background: var(--accent);
+            color: #000;
+        }
+        
+        @media (min-width: 500px) {
+            .feature-grid { grid-template-columns: repeat(4, 1fr); }
+            .cmd-super-grid { grid-template-columns: repeat(3, 1fr); }
+            .pin-keypad-ios { gap: 18px; }
         }
     </style>
 </head>
 <body>
 <div class="app">
     <div class="header">
-            <div class="logo-area">
-                <img src="img/GD.png" alt="Logo" class="logo-icon">
-                <div class="logo-text">KPC</div>
-            </div>
+        <div class="logo-area">
+            <img src="img/GD.png" alt="Logo" class="logo-icon">
+            <div class="logo-text">KPC</div>
+        </div>
         <div class="user-name-display" id="userNameDisplay">
             <span>👤</span>
             <span id="displayName">Khách</span>
             <button class="edit-name-btn" id="editNameBtn">✎</button>
-        </div>
-        <div class="mode-switch">
-            <button class="mode-btn" data-mode="touch">👆 Chạm</button>
-            <button class="mode-btn" data-mode="scroll">📜 Cuộn</button>
-            <button class="mode-btn" data-mode="drag">✋ Kéo</button>
         </div>
         <div class="status">
             <div class="status-dot" id="statusDot"></div>
@@ -635,10 +766,9 @@
         <div class="drawer-handle" id="drawerHandle"></div>
         <div class="drawer-content">
             <div class="btn-row">
-                <button class="btn-primary" id="leftClick">🖱️ Trái</button>
-                <button class="btn-primary" id="rightClick">🔘 Phải</button>
-                <button class="btn-primary" id="doubleClick">⚡ Đúp</button>
                 <button class="btn-primary btn-message" id="messageBtn">💬 Tin nhắn</button>
+                <button class="btn-primary btn-lock" id="lockBtn">🔒 Khóa máy</button>
+                <button class="btn-primary btn-unlock" id="unlockBtn">🔓 Mở khóa</button>
             </div>
             <div class="fps-control">
                 <span class="fps-label">🚀 Turbo mode</span>
@@ -694,620 +824,789 @@
         </div>
     </div>
 
+    <div class="lock-popup" id="lockPopup">
+        <h3>🔒 Khóa máy từ xa</h3>
+        <div class="input-group">
+            <label>Tên của bạn</label>
+            <input type="text" id="lockSenderName" placeholder="Nhập tên của bạn...">
+        </div>
+        <div class="input-group">
+            <label>Nội dung thông báo</label>
+            <textarea id="lockMessage" rows="3" placeholder="Lý do khóa máy..."></textarea>
+        </div>
+        <div class="checkbox-group">
+            <input type="checkbox" id="lockPermanent">
+            <label>🔒 Khóa vĩnh viễn</label>
+        </div>
+        <div class="input-group" id="lockDurationGroup">
+            <label>Thời gian khóa (phút)</label>
+            <input type="number" id="lockDuration" min="1" max="60" value="5" placeholder="Nhập số phút">
+        </div>
+        <div class="popup-buttons">
+            <button class="btn-cancel" id="cancelLock">Hủy</button>
+            <button class="btn-lock-action" id="sendLock">🔒 Khóa máy</button>
+        </div>
+    </div>
+
+    <div class="unlock-popup" id="unlockPopup">
+        <h3>🔓 Mở khóa máy từ xa</h3>
+        <div class="input-group">
+            <label>Tên người yêu cầu</label>
+            <input type="text" id="unlockSenderName" placeholder="Nhập tên của bạn...">
+        </div>
+        <div class="input-group">
+            <label>Ghi chú (tùy chọn)</label>
+            <textarea id="unlockNote" rows="2" placeholder="Nhập ghi chú nếu có..."></textarea>
+        </div>
+        <div class="popup-buttons">
+            <button class="btn-cancel" id="cancelUnlock">Hủy</button>
+            <button class="btn-unlock-action" id="sendUnlock">🔓 Mở khóa</button>
+        </div>
+    </div>
+
+    <div class="web-popup" id="webPopup">
+        <h3>🌐 Truy cập trang web</h3>
+        <div class="input-group">
+            <label>Địa chỉ URL</label>
+            <input type="text" id="webUrl" placeholder="https://www.google.com" value="https://">
+        </div>
+        <div class="suggestions">
+            <span data-url="https://www.google.com">Google</span>
+            <span data-url="https://www.youtube.com">YouTube</span>
+            <span data-url="https://www.facebook.com">Facebook</span>
+            <span data-url="https://github.com">GitHub</span>
+            <span data-url="https://chat.openai.com">ChatGPT</span>
+        </div>
+        <div class="popup-buttons">
+            <button class="btn-cancel" id="cancelWeb">Hủy</button>
+            <button class="btn-web-action" id="sendWeb">🌐 Truy cập</button>
+        </div>
+    </div>
+
+    <!-- Popup đổi tên mới -->
+    <div class="rename-popup" id="renamePopup">
+        <h3>✎ Đổi tên hiển thị</h3>
+        <div class="input-group">
+            <label>Tên mới của bạn</label>
+            <input type="text" id="newNameInput" placeholder="Nhập tên hiển thị..." maxlength="30">
+        </div>
+        <div class="popup-buttons">
+            <button class="btn-cancel" id="cancelRename">Hủy</button>
+            <button class="btn-rename" id="saveRename">Lưu</button>
+        </div>
+    </div>
+
     <div class="info-badge" id="infoBadge">📡 0 FPS | ⚡ 0ms</div>
     <div class="latency-bar" id="latencyBar">📶 0ms</div>
     <div class="toast-fast" id="toast"></div>
     <div class="loader" id="loader"><div class="spinner"></div><div>Đồng bộ...</div></div>
+    <div class="debug-panel" id="debugPanel">🔍 Ready</div>
+    
+    <div class="pin-lock-ios" id="pinLock">
+        <div class="pin-container-ios">
+            <div class="pin-header">
+                <div class="pin-title-ios">Xác thực</div>
+                <div class="pin-subtitle-ios">Nhập mã PIN 6 số</div>
+            </div>
+            <div class="pin-dots-ios" id="pinDots">
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+                <div class="pin-dot"></div>
+            </div>
+            <div class="pin-keypad-ios" id="pinKeypad"></div>
+            <div class="pin-error-ios" id="pinError"></div>
+        </div>
+    </div>
 </div>
 
 <script>
-    let ws = null;
-    let screenImg = document.getElementById('remote-screen');
-    let screenW = 1920, screenH = 1080;
-    let currentMode = 'touch';
-    let isDragging = false;
-    let scrollStartY = 0;
-    let zoom = 1;
-    let fps = 0, frameCount = 0, lastFpsTime = 0;
-    let connected = false;
-    let reconnectTimer = null;
-    let connecting = false;
-    let targetFPS = 100;
-    let latency = 0;
-    let lastPingTime = 0;
-    let pingInterval = null;
-    let mouseMoveThrottle = false;
-    let lastMouseX = 960, lastMouseY = 540;
-    let hasMousePos = false;
-    let currentUserName = '';
-    
-    const statusDot = document.getElementById('statusDot');
-    const statusText = document.getElementById('statusText');
-    const loader = document.getElementById('loader');
-    const toast = document.getElementById('toast');
-    const controlDrawer = document.getElementById('controlDrawer');
-    const advOverlay = document.getElementById('advOverlay');
-    const kbdOverlay = document.getElementById('kbdOverlay');
-    const infoBadge = document.getElementById('infoBadge');
-    const latencyBar = document.getElementById('latencyBar');
-    const fpsSlider = document.getElementById('fpsSlider');
-    const fpsValueDisplay = document.getElementById('fpsValueDisplay');
-    const turboBadge = document.getElementById('turboBadge');
-    const messagePopup = document.getElementById('messagePopup');
-    const messageInput = document.getElementById('messageInput');
-    const senderNameInput = document.getElementById('senderName');
-    const saveNameCheckbox = document.getElementById('saveNameCheckbox');
-    const cancelMessage = document.getElementById('cancelMessage');
-    const sendMessageBtn = document.getElementById('sendMessage');
-    const displayNameSpan = document.getElementById('displayName');
-    const editNameBtn = document.getElementById('editNameBtn');
-    const messageBtn = document.getElementById('messageBtn');
-
-    // Load saved name from localStorage
-    function loadSavedName() {
-        const savedName = localStorage.getItem('userName');
-        if (savedName) {
-            currentUserName = savedName;
-            senderNameInput.value = savedName;
-            displayNameSpan.textContent = savedName;
-            saveNameCheckbox.checked = true;
-        } else {
-            currentUserName = 'Khách';
-            senderNameInput.value = '';
-            displayNameSpan.textContent = 'Khách';
-            saveNameCheckbox.checked = false;
-        }
-    }
-    
-    // Save name to localStorage
-    function saveUserName(name) {
-        if (saveNameCheckbox.checked && name && name.trim() !== '') {
-            localStorage.setItem('userName', name.trim());
-            currentUserName = name.trim();
-            displayNameSpan.textContent = currentUserName;
-        } else if (!saveNameCheckbox.checked) {
-            localStorage.removeItem('userName');
-            currentUserName = name.trim() || 'Khách';
-            displayNameSpan.textContent = currentUserName;
-        }
-    }
-    
-    // Update display name
-    function updateDisplayName() {
-        const savedName = localStorage.getItem('userName');
-        if (savedName) {
-            displayNameSpan.textContent = savedName;
-            currentUserName = savedName;
-        } else {
-            displayNameSpan.textContent = 'Khách';
-            currentUserName = 'Khách';
-        }
-    }
-    
-    // Edit name
-    function editName() {
-        const newName = prompt('Nhập tên của bạn:', currentUserName);
-        if (newName && newName.trim() !== '') {
-            currentUserName = newName.trim();
-            displayNameSpan.textContent = currentUserName;
-            senderNameInput.value = currentUserName;
-            if (saveNameCheckbox.checked) {
-                localStorage.setItem('userName', currentUserName);
+    (function() {
+        // ========== BIẾN TOÀN CỤC ==========
+        let ws = null;
+        let screenImg = document.getElementById('remote-screen');
+        let screenW = 1920, screenH = 1080;
+        let zoom = 1;
+        let fps = 0, frameCount = 0, lastFpsTime = 0;
+        let connected = false;
+        let reconnectTimer = null;
+        let connecting = false;
+        let targetFPS = 100;
+        let latency = 0;
+        let lastPingTime = 0;
+        let pingInterval = null;
+        let lastMouseX = 960, lastMouseY = 540;
+        let sessionId = null;
+        let isAuthenticated = false;
+        
+        // DOM
+        const statusDot = document.getElementById('statusDot');
+        const statusText = document.getElementById('statusText');
+        const loader = document.getElementById('loader');
+        const toast = document.getElementById('toast');
+        const controlDrawer = document.getElementById('controlDrawer');
+        const advOverlay = document.getElementById('advOverlay');
+        const kbdOverlay = document.getElementById('kbdOverlay');
+        const infoBadge = document.getElementById('infoBadge');
+        const latencyBar = document.getElementById('latencyBar');
+        const fpsSlider = document.getElementById('fpsSlider');
+        const fpsValueDisplay = document.getElementById('fpsValueDisplay');
+        const turboBadge = document.getElementById('turboBadge');
+        const messagePopup = document.getElementById('messagePopup');
+        const lockPopup = document.getElementById('lockPopup');
+        const unlockPopup = document.getElementById('unlockPopup');
+        const webPopup = document.getElementById('webPopup');
+        const renamePopup = document.getElementById('renamePopup');
+        const newNameInput = document.getElementById('newNameInput');
+        const cancelRename = document.getElementById('cancelRename');
+        const saveRename = document.getElementById('saveRename');
+        const messageInput = document.getElementById('messageInput');
+        const senderNameInput = document.getElementById('senderName');
+        const saveNameCheckbox = document.getElementById('saveNameCheckbox');
+        const cancelMessage = document.getElementById('cancelMessage');
+        const sendMessageBtn = document.getElementById('sendMessage');
+        const displayNameSpan = document.getElementById('displayName');
+        const editNameBtn = document.getElementById('editNameBtn');
+        const messageBtn = document.getElementById('messageBtn');
+        const lockBtn = document.getElementById('lockBtn');
+        const unlockBtn = document.getElementById('unlockBtn');
+        const debugPanel = document.getElementById('debugPanel');
+        const pinLock = document.getElementById('pinLock');
+        
+        // Lock popup elements
+        const lockSenderName = document.getElementById('lockSenderName');
+        const lockMessage = document.getElementById('lockMessage');
+        const lockPermanent = document.getElementById('lockPermanent');
+        const lockDuration = document.getElementById('lockDuration');
+        const lockDurationGroup = document.getElementById('lockDurationGroup');
+        const cancelLock = document.getElementById('cancelLock');
+        const sendLock = document.getElementById('sendLock');
+        
+        // Unlock popup elements
+        const unlockSenderName = document.getElementById('unlockSenderName');
+        const unlockNote = document.getElementById('unlockNote');
+        const cancelUnlock = document.getElementById('cancelUnlock');
+        const sendUnlock = document.getElementById('sendUnlock');
+        
+        // Web popup elements
+        const webUrl = document.getElementById('webUrl');
+        const cancelWeb = document.getElementById('cancelWeb');
+        const sendWeb = document.getElementById('sendWeb');
+        const suggestions = document.querySelectorAll('[data-url]');
+        
+        // Xóa session storage khi tải lại trang
+        localStorage.removeItem('remote_session');
+        sessionId = null;
+        
+        // Xử lý checkbox khóa vĩnh viễn
+        lockPermanent.addEventListener('change', function() {
+            if (this.checked) {
+                lockDurationGroup.style.display = 'none';
+                lockDuration.value = 0;
+            } else {
+                lockDurationGroup.style.display = 'block';
+                lockDuration.value = 5;
             }
-            showToast(`✅ Đã đổi tên thành: ${currentUserName}`);
-        }
-    }
-
-    let toastTimer = null;
-    function showToast(msg) {
-        if (toastTimer) clearTimeout(toastTimer);
-        toast.textContent = msg;
-        toast.classList.add('show');
-        toastTimer = setTimeout(() => toast.classList.remove('show'), 2000);
-    }
-
-    function updateConnection(status) {
-        if (connected === status) return;
-        connected = status;
-        if (status) {
-            statusDot.classList.add('connected');
-            statusText.innerText = 'ON';
-            loader.classList.remove('show');
-            if (pingInterval) clearInterval(pingInterval);
-            pingInterval = setInterval(() => {
-                if (ws && ws.readyState === WebSocket.OPEN) {
-                    lastPingTime = Date.now();
-                    sendCommand('ping', {});
+        });
+        
+        // Xử lý gợi ý link
+        suggestions.forEach(suggestion => {
+            suggestion.addEventListener('click', () => {
+                const url = suggestion.getAttribute('data-url');
+                webUrl.value = url;
+            });
+        });
+        
+        function updateDebug(msg) {
+            debugPanel.innerHTML = msg;
+            setTimeout(() => {
+                if (debugPanel.innerHTML === msg) {
+                    debugPanel.innerHTML = '🔍 Ready';
                 }
             }, 2000);
-        } else {
-            statusDot.classList.remove('connected');
-            statusText.innerText = 'OFF';
-            loader.classList.add('show');
-            if (pingInterval) clearInterval(pingInterval);
         }
-    }
-
-    function sendCommand(cmd, params = {}) {
-        if (ws && ws.readyState === WebSocket.OPEN && connected) {
-            try {
-                ws.send(JSON.stringify({ type: 'command', command: cmd, ...params }));
+        
+        function hapticFeedback() {
+            if (window.navigator && window.navigator.vibrate) {
+                window.navigator.vibrate(10);
+            }
+        }
+        
+        // ========== HÀM LẤY TỌA ĐỘ ==========
+        function getRemoteCoordinates(clientX, clientY) {
+            const rect = screenImg.getBoundingClientRect();
+            if (!rect.width || !rect.height) return null;
+            
+            let imgDisplayWidth = rect.width;
+            let imgDisplayHeight = rect.height;
+            let offsetX = rect.left;
+            let offsetY = rect.top;
+            
+            let x = (clientX - offsetX) / imgDisplayWidth;
+            let y = (clientY - offsetY) / imgDisplayHeight;
+            
+            x = Math.min(1, Math.max(0, x));
+            y = Math.min(1, Math.max(0, y));
+            
+            const remoteX = Math.round(x * screenW);
+            const remoteY = Math.round(y * screenH);
+            
+            return { x: remoteX, y: remoteY };
+        }
+        
+        // ========== GỬI LỆNH ==========
+        function sendCommand(cmd, params) {
+            params = params || {};
+            if (ws && ws.readyState === WebSocket.OPEN && isAuthenticated) {
+                const msg = { type: 'command', command: cmd, ...params, session_id: sessionId };
+                ws.send(JSON.stringify(msg));
                 return true;
-            } catch(e) {
-                console.log('Send error:', e);
+            }
+            return false;
+        }
+        
+        // ========== XỬ LÝ CHẠM ==========
+        function handleTouchStart(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const coords = getRemoteCoordinates(touch.clientX, touch.clientY);
+            if (!coords) return;
+            
+            lastMouseX = coords.x;
+            lastMouseY = coords.y;
+            sendCommand('mouse_click', { x: coords.x, y: coords.y, button: 'left' });
+            hapticFeedback();
+            showToast(`🖱️ Click`);
+            updateDebug(`Click (${coords.x},${coords.y})`);
+        }
+        
+        function handleTouchMove(e) {
+            e.preventDefault();
+        }
+        
+        function handleTouchEnd(e) {
+            e.preventDefault();
+        }
+        
+        // ========== XỬ LÝ CHUỘT ==========
+        function handleMouseDown(e) {
+            e.preventDefault();
+            const coords = getRemoteCoordinates(e.clientX, e.clientY);
+            if (!coords) return;
+            
+            lastMouseX = coords.x;
+            lastMouseY = coords.y;
+            sendCommand('mouse_click', { x: coords.x, y: coords.y, button: 'left' });
+        }
+        
+        function bindScreenEvents() {
+            screenImg.addEventListener('touchstart', handleTouchStart, { passive: false });
+            screenImg.addEventListener('touchmove', handleTouchMove, { passive: false });
+            screenImg.addEventListener('touchend', handleTouchEnd);
+            screenImg.addEventListener('mousedown', handleMouseDown);
+        }
+        
+        // ========== PIN ==========
+        let currentPin = '';
+        let pinDots = document.getElementById('pinDots');
+        let pinError = document.getElementById('pinError');
+        let isVerifying = false;
+        
+        function updatePinDots() {
+            const dots = pinDots.querySelectorAll('.pin-dot');
+            const len = currentPin.length;
+            for (let i = 0; i < dots.length; i++) {
+                if (i < len) dots[i].classList.add('filled');
+                else dots[i].classList.remove('filled');
+                dots[i].classList.remove('error');
             }
         }
-        return false;
-    }
-
-    function sendMessageToSystem(message, senderName) {
-        if (!message || message.trim() === '') {
-            showToast('⚠️ Vui lòng nhập tin nhắn');
-            return false;
-        }
         
-        if (!senderName || senderName.trim() === '') {
-            showToast('⚠️ Vui lòng nhập tên của bạn');
-            senderNameInput.focus();
-            return false;
-        }
-        
-        const success = sendCommand('send_message', { 
-            message: message.trim(),
-            timestamp: Date.now(),
-            sender: senderName.trim()
-        });
-        
-        if (success) {
-            showToast(`✅ Đã gửi tin nhắn từ "${senderName.trim()}"`);
-            return true;
-        } else {
-            showToast('❌ Không thể gửi tin nhắn');
-            return false;
-        }
-    }
-
-    function openMessagePopup() {
-        // Load saved name
-        const savedName = localStorage.getItem('userName');
-        if (savedName) {
-            senderNameInput.value = savedName;
-            saveNameCheckbox.checked = true;
-        } else {
-            senderNameInput.value = '';
-            saveNameCheckbox.checked = false;
-        }
-        messageInput.value = '';
-        messagePopup.classList.add('open');
-        setTimeout(() => senderNameInput.focus(), 100);
-    }
-
-    function closeMessagePopup() {
-        messagePopup.classList.remove('open');
-    }
-
-    function handleSendMessage() {
-        const message = messageInput.value;
-        const senderName = senderNameInput.value;
-        
-        // Save name if checkbox is checked
-        if (saveNameCheckbox.checked && senderName && senderName.trim() !== '') {
-            localStorage.setItem('userName', senderName.trim());
-            currentUserName = senderName.trim();
-            displayNameSpan.textContent = currentUserName;
-        } else if (!saveNameCheckbox.checked) {
-            localStorage.removeItem('userName');
-            currentUserName = senderName.trim() || 'Khách';
-            displayNameSpan.textContent = currentUserName;
-        }
-        
-        if (sendMessageToSystem(message, senderName)) {
-            closeMessagePopup();
-        }
-    }
-
-    function setTargetFPS(fpsVal) {
-        targetFPS = fpsVal;
-        fpsValueDisplay.innerText = `${targetFPS}`;
-        sendCommand('set_fps', { fps: targetFPS });
-        if (targetFPS >= 85) {
-            turboBadge.style.background = '#ff3366';
-            turboBadge.style.color = '#fff';
-            turboBadge.innerText = '⚡ EXTREME';
-        } else if (targetFPS >= 60) {
-            turboBadge.style.background = '#ffaa44';
-            turboBadge.style.color = '#000';
-            turboBadge.innerText = '🔥 TURBO';
-        } else {
-            turboBadge.style.background = '#00ff88';
-            turboBadge.style.color = '#000';
-            turboBadge.innerText = 'TURBO';
-        }
-    }
-
-    fpsSlider.addEventListener('input', (e) => setTargetFPS(parseInt(e.target.value)));
-
-    function getRealCoords(clientX, clientY) {
-        const rect = screenImg.getBoundingClientRect();
-        if (rect.width === 0) return { x: lastMouseX, y: lastMouseY };
-        let rx = (clientX - rect.left) / rect.width;
-        let ry = (clientY - rect.top) / rect.height;
-        rx = Math.min(1, Math.max(0, rx));
-        ry = Math.min(1, Math.max(0, ry));
-        return { x: Math.floor(rx * screenW), y: Math.floor(ry * screenH) };
-    }
-
-    function updateMousePosition(clientX, clientY) {
-        const coords = getRealCoords(clientX, clientY);
-        lastMouseX = coords.x;
-        lastMouseY = coords.y;
-        hasMousePos = true;
-    }
-
-    function onTouchStart(e) {
-        e.preventDefault();
-        const touch = e.touches[0];
-        const coords = getRealCoords(touch.clientX, touch.clientY);
-        updateMousePosition(touch.clientX, touch.clientY);
-        
-        if (currentMode === 'scroll') {
-            isDragging = true;
-            scrollStartY = touch.clientY;
-        } else if (currentMode === 'touch') {
-            sendCommand('mouse_click', { x: coords.x, y: coords.y, button: 'left' });
-        } else if (currentMode === 'drag') {
-            isDragging = true;
-            sendCommand('mouse_move', { x: coords.x, y: coords.y });
-            sendCommand('mouse_click', { x: coords.x, y: coords.y, button: 'left' });
-        }
-    }
-    
-    function onTouchMove(e) {
-        e.preventDefault();
-        if (!isDragging) return;
-        const touch = e.touches[0];
-        const coords = getRealCoords(touch.clientX, touch.clientY);
-        updateMousePosition(touch.clientX, touch.clientY);
-        
-        if (currentMode === 'scroll') {
-            const deltaY = scrollStartY - touch.clientY;
-            if (Math.abs(deltaY) > 10) {
-                let scrollDelta = Math.round(deltaY / 12);
-                scrollDelta = Math.min(6, Math.max(-6, scrollDelta));
-                if (scrollDelta !== 0) {
-                    sendCommand('mouse_scroll', { delta: scrollDelta });
-                }
-                scrollStartY = touch.clientY;
-            }
-        } else if (currentMode === 'drag') {
-            sendCommand('mouse_move', { x: coords.x, y: coords.y });
-        }
-    }
-    
-    function onTouchEnd(e) {
-        e.preventDefault();
-        if (currentMode === 'drag' && isDragging) {
-            sendCommand('mouse_click', { button: 'left' });
-        }
-        isDragging = false;
-    }
-
-    function handleMouseMove(e) {
-        if (mouseMoveThrottle) return;
-        mouseMoveThrottle = true;
-        
-        const coords = getRealCoords(e.clientX, e.clientY);
-        updateMousePosition(e.clientX, e.clientY);
-        if (currentMode === 'drag' && isDragging) {
-            sendCommand('mouse_move', { x: coords.x, y: coords.y });
-        }
-        
-        setTimeout(() => { mouseMoveThrottle = false; }, 16);
-    }
-    
-    function handleMouseClick(e, button) {
-        e.preventDefault();
-        const coords = getRealCoords(e.clientX, e.clientY);
-        updateMousePosition(e.clientX, e.clientY);
-        sendCommand('mouse_click', { x: coords.x, y: coords.y, button: button });
-    }
-    
-    function handleMouseDragStart(e) {
-        if (currentMode === 'drag') {
-            e.preventDefault();
-            isDragging = true;
-            const coords = getRealCoords(e.clientX, e.clientY);
-            updateMousePosition(e.clientX, e.clientY);
-            sendCommand('mouse_move', { x: coords.x, y: coords.y });
-            sendCommand('mouse_click', { x: coords.x, y: coords.y, button: 'left' });
-        }
-    }
-    
-    function handleMouseDragEnd(e) {
-        if (currentMode === 'drag' && isDragging) {
-            e.preventDefault();
-            sendCommand('mouse_click', { button: 'left' });
-            isDragging = false;
-        }
-    }
-
-    function handleWheel(e) {
-        e.preventDefault();
-        let delta = e.deltaY > 0 ? -2 : 2;
-        sendCommand('mouse_scroll', { delta: delta });
-    }
-
-    function clickAtSavedPosition(button) {
-        if (!hasMousePos) {
-            lastMouseX = screenW / 2;
-            lastMouseY = screenH / 2;
-            hasMousePos = true;
-        }
-        sendCommand('mouse_click', { x: lastMouseX, y: lastMouseY, button: button });
-    }
-    
-    function doubleClickAtSavedPosition() {
-        if (!hasMousePos) {
-            lastMouseX = screenW / 2;
-            lastMouseY = screenH / 2;
-            hasMousePos = true;
-        }
-        sendCommand('mouse_double_click', { x: lastMouseX, y: lastMouseY });
-    }
-
-    function setMode(mode) {
-        currentMode = mode;
-        document.querySelectorAll('.mode-btn').forEach(btn => {
-            if (btn.dataset.mode === mode) btn.classList.add('active');
-            else btn.classList.remove('active');
-        });
-        const names = { touch:'Chạm', scroll:'Cuộn', drag:'Kéo' };
-        showToast(`📱 Chế độ: ${names[mode]}`);
-    }
-
-    function zoomIn() { zoom = Math.min(3, zoom + 0.2); screenImg.style.transform = `scale(${zoom})`; }
-    function zoomOut() { zoom = Math.max(0.5, zoom - 0.2); screenImg.style.transform = `scale(${zoom})`; }
-    function resetZoomFunc() { zoom = 1; screenImg.style.transform = 'scale(1)'; }
-
-    function sendAction(cmd) {
-        if (cmd.includes('+')) {
-            sendCommand('hotkey', { keys: cmd.split('+') });
-        } else if (cmd === 'win') {
-            sendCommand('hotkey', { keys: ['win'] });
-        } else {
-            sendCommand('key_press', { key: cmd });
-        }
-    }
-    
-    function sendWinKey() {
-        sendCommand('hotkey', { keys: ['win'] });
-    }
-
-    function handleSpecialCommand(cmd) {
-        if (cmd === "cmd_special") {
-            sendCommand('hotkey', { keys: ['win', 'r'] });
+        function showPinError(msg) {
+            pinError.textContent = msg || 'Mã PIN không đúng';
+            const dots = pinDots.querySelectorAll('.pin-dot');
+            for (let i = 0; i < dots.length; i++) dots[i].classList.add('error');
             setTimeout(() => {
-                sendCommand('key_type', { text: 'cmd' });
-                setTimeout(() => sendCommand('key_press', { key: 'enter' }), 60);
-            }, 80);
-            return true;
+                for (let i = 0; i < dots.length; i++) dots[i].classList.remove('error');
+            }, 500);
+            setTimeout(() => {
+                currentPin = '';
+                updatePinDots();
+                pinError.textContent = '';
+            }, 800);
         }
-        return false;
-    }
-
-    const quickFeatures = [
-        { name: "📋 Sao chép", cmd: "ctrl+c" }, { name: "📌 Dán", cmd: "ctrl+v" }, { name: "✂️ Cắt", cmd: "ctrl+x" },
-        { name: "↩️ Hoàn tác", cmd: "ctrl+z" }, { name: "✅ Chọn hết", cmd: "ctrl+a" }, { name: "🖥️ Mở CMD", cmd: "cmd_special" },
-        { name: "🔄 Alt+Tab", cmd: "alt+tab" }, { name: "🏠 Desktop", cmd: "win+d" }, { name: "📁 Explorer", cmd: "win+e" },
-        { name: "⚙️ Run", cmd: "win+r" }, { name: "🔁 F5", cmd: "f5" }, { name: "❌ ESC", cmd: "esc" }, 
-        { name: "↵ Enter", cmd: "enter" }, { name: "⊞ Win", cmd: "win" }, { name: "💬 Tin nhắn", cmd: "message" }
-    ];
-
-    const superAdvanced = [
-        { name: "📋 Sao chép", cmd: "ctrl+c" }, { name: "📌 Dán", cmd: "ctrl+v" }, { name: "✂️ Cắt", cmd: "ctrl+x" },
-        { name: "↩️ Hoàn tác", cmd: "ctrl+z" }, { name: "✅ Chọn hết", cmd: "ctrl+a" }, { name: "🔁 Làm lại", cmd: "ctrl+y" },
-        { name: "💾 Lưu", cmd: "ctrl+s" }, { name: "🔍 Tìm", cmd: "ctrl+f" }, { name: "🔄 Alt+Tab", cmd: "alt+tab" },
-        { name: "❌ Đóng cửa sổ", cmd: "alt+f4" }, { name: "🏠 Desktop", cmd: "win+d" }, { name: "⚙️ Run", cmd: "win+r" },
-        { name: "📁 Explorer", cmd: "win+e" }, { name: "💻 Mở CMD", cmd: "cmd_special" }, { name: "📸 Chụp màn", cmd: "printscreen" },
-        { name: "🔁 F5", cmd: "f5" }, { name: "🎬 F11", cmd: "f11" }, { name: "💬 Gửi tin nhắn", cmd: "message" },
-        { name: "❌ ESC", cmd: "esc" }, { name: "↹ Tab", cmd: "tab" }, { name: "⌫ Delete", cmd: "delete" },
-        { name: "⬆️ Lên", cmd: "up" }, { name: "⬇️ Xuống", cmd: "down" }, { name: "⬅️ Trái", cmd: "left" }, 
-        { name: "➡️ Phải", cmd: "right" }, { name: "⏎ Enter", cmd: "enter" }, { name: "␣ Space", cmd: "space" }, 
-        { name: "🔙 Backspace", cmd: "backspace" }, { name: "⊞ Win", cmd: "win" }
-    ];
-
-    function buildQuickGrid() {
-        const container = document.getElementById('quickGrid');
-        container.innerHTML = quickFeatures.map(f => `<div class="feature-card" data-qcmd="${f.cmd}">${f.name}</div>`).join('');
-        document.querySelectorAll('[data-qcmd]').forEach(el => {
-            el.addEventListener('click', () => {
-                const cmd = el.dataset.qcmd;
-                if (cmd === "cmd_special") handleSpecialCommand(cmd);
-                else if (cmd === "win") sendWinKey();
-                else if (cmd === "message") openMessagePopup();
-                else sendAction(cmd);
-            });
-        });
-    }
-
-    function buildSuperGrid() {
-        const container = document.getElementById('superGrid');
-        container.innerHTML = superAdvanced.map(f => `<div class="cmd-super" data-scmd="${f.cmd}">${f.name}</div>`).join('');
-        document.querySelectorAll('[data-scmd]').forEach(el => {
-            el.addEventListener('click', () => {
-                const cmd = el.dataset.scmd;
-                if (cmd === "cmd_special") handleSpecialCommand(cmd);
-                else if (cmd === "win") sendWinKey();
-                else if (cmd === "message") {
-                    advOverlay.classList.remove('open');
-                    openMessagePopup();
-                } else sendAction(cmd);
-                advOverlay.classList.remove('open');
-            });
-        });
-    }
-
-    const keyboardKeys = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m',
-        '1','2','3','4','5','6','7','8','9','0','-','=','[',']','\\',';',"'",',','.','/','␣','↵','⌫','⇥','⎋'];
-    function buildVKB() {
-        const grid = document.getElementById('vkbGrid');
-        grid.innerHTML = keyboardKeys.map(key => {
-            let display = key, sendVal = key;
-            if (key === '␣') { display = '␣ Space'; sendVal = 'space'; }
-            else if (key === '↵') { display = '↵ Enter'; sendVal = 'enter'; }
-            else if (key === '⌫') { display = '⌫ Del'; sendVal = 'delete'; }
-            else if (key === '⇥') { display = '⇥ Tab'; sendVal = 'tab'; }
-            else if (key === '⎋') { display = '⎋ ESC'; sendVal = 'esc'; }
-            return `<div class="cmd-super" data-vk="${sendVal}">${display}</div>`;
-        }).join('');
-        document.querySelectorAll('[data-vk]').forEach(el => {
-            el.addEventListener('click', () => {
-                let val = el.dataset.vk;
-                if (val === 'space') sendCommand('key_press', { key: 'space' });
-                else if (val === 'enter') sendCommand('key_press', { key: 'enter' });
-                else if (val === 'tab') sendCommand('key_press', { key: 'tab' });
-                else if (val === 'delete') sendCommand('key_press', { key: 'delete' });
-                else if (val === 'esc') sendCommand('key_press', { key: 'esc' });
-                else sendCommand('key_type', { text: val });
-                kbdOverlay.classList.remove('open');
-            });
-        });
-    }
-
-    function connectWS() {
-        if (connecting) return;
-        connecting = true;
         
-        const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const wsUrl = `${protocol}//${location.host}`;
-        
-        ws = new WebSocket(wsUrl);
-        
-        ws.onopen = () => { 
-            connecting = false; 
-            updateConnection(true); 
-            sendCommand('set_fps', { fps: targetFPS }); 
-            sendCommand('set_quality', { quality: 85 });
-        };
-        
-        ws.onmessage = (ev) => {
-            try {
-                const data = JSON.parse(ev.data);
-                
-                if (data.type === 'pong') { 
-                    latency = Date.now() - lastPingTime; 
-                    latencyBar.innerText = `📶 ${latency}ms`; 
-                    infoBadge.innerText = `📡 ${fps} FPS | ⚡ ${latency}ms`; 
-                    return; 
+        function sendPinAuth() {
+            if (currentPin.length === 6 && !isVerifying && ws && ws.readyState === WebSocket.OPEN) {
+                isVerifying = true;
+                try {
+                    ws.send(JSON.stringify({ type: 'command', command: 'auth_pin', pin: currentPin }));
+                } catch(e) {
+                    showPinError('❌ Lỗi kết nối');
+                    currentPin = '';
+                    updatePinDots();
+                    isVerifying = false;
                 }
-                
-                if (data.type === 'screen') {
-                    if (data.data) {
-                        screenImg.src = 'data:image/jpeg;base64,' + data.data;
+            }
+        }
+        
+        function onPinKeyPress(keyValue) {
+            if (keyValue === 'delete') {
+                if (currentPin.length > 0) {
+                    currentPin = currentPin.slice(0, -1);
+                    updatePinDots();
+                    pinError.textContent = '';
+                }
+            } else {
+                if (currentPin.length < 6) {
+                    currentPin += keyValue;
+                    updatePinDots();
+                    pinError.textContent = '';
+                    if (currentPin.length === 6) sendPinAuth();
+                }
+            }
+        }
+        
+        function createKeypad() {
+            const keypad = document.getElementById('pinKeypad');
+            const keys = [
+                { value: '1', display: '1' }, { value: '2', display: '2' }, { value: '3', display: '3' },
+                { value: '4', display: '4' }, { value: '5', display: '5' }, { value: '6', display: '6' },
+                { value: '7', display: '7' }, { value: '8', display: '8' }, { value: '9', display: '9' },
+                { value: '', display: '', empty: true },
+                { value: '0', display: '0' }, { value: 'delete', display: '⌫', special: true }
+            ];
+            let html = '';
+            for (let i = 0; i < keys.length; i++) {
+                const k = keys[i];
+                if (k.empty) {
+                    html += '<div class="pin-key-ios special" style="visibility: hidden;"></div>';
+                } else {
+                    let cls = 'pin-key-ios';
+                    if (k.special) cls += ' special';
+                    if (k.value === 'delete') cls += ' delete';
+                    html += `<button class="${cls}" data-pin-key="${k.value}">${k.display}</button>`;
+                }
+            }
+            keypad.innerHTML = html;
+            const btns = keypad.querySelectorAll('[data-pin-key]');
+            for (let i = 0; i < btns.length; i++) {
+                const btn = btns[i];
+                const val = btn.getAttribute('data-pin-key');
+                btn.addEventListener('touchstart', (e) => { e.preventDefault(); onPinKeyPress(val); });
+                btn.addEventListener('click', (e) => { e.preventDefault(); onPinKeyPress(val); });
+            }
+        }
+        
+        function showToast(msg) {
+            if (window.toastTimer) clearTimeout(window.toastTimer);
+            toast.textContent = msg;
+            toast.classList.add('show');
+            window.toastTimer = setTimeout(() => toast.classList.remove('show'), 600);
+        }
+        
+        function updateConnection(status) {
+            if (connected === status) return;
+            connected = status;
+            if (status) {
+                statusDot.classList.add('connected');
+                statusText.innerText = 'ON';
+                loader.classList.remove('show');
+                if (pingInterval) clearInterval(pingInterval);
+                pingInterval = setInterval(() => {
+                    if (ws && ws.readyState === WebSocket.OPEN && isAuthenticated) {
+                        lastPingTime = Date.now();
+                        sendCommand('ping', {});
                     }
-                    if (data.original_width) screenW = data.original_width;
-                    if (data.original_height) screenH = data.original_height;
+                }, 3000);
+            } else {
+                statusDot.classList.remove('connected');
+                statusText.innerText = 'OFF';
+                if (!isAuthenticated) loader.classList.add('show');
+                if (pingInterval) clearInterval(pingInterval);
+            }
+        }
+        
+        function setTargetFPS(fpsVal) {
+            targetFPS = fpsVal;
+            fpsValueDisplay.innerText = targetFPS;
+            sendCommand('set_fps', { fps: targetFPS });
+            if (targetFPS >= 85) {
+                turboBadge.style.background = '#ff3366';
+                turboBadge.innerText = '⚡ EXTREME';
+            } else if (targetFPS >= 60) {
+                turboBadge.style.background = '#ffaa44';
+                turboBadge.innerText = '🔥 TURBO';
+            } else {
+                turboBadge.style.background = '#00ff88';
+                turboBadge.innerText = 'TURBO';
+            }
+        }
+        
+        // ========== WEBSOCKET ==========
+        function connectWS() {
+            if (connecting) return;
+            connecting = true;
+            const protocol = location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const wsUrl = protocol + '//' + location.host;
+            ws = new WebSocket(wsUrl);
+            
+            ws.onopen = () => {
+                connecting = false;
+                updateConnection(true);
+                updateDebug('✅ Đã kết nối WebSocket');
+            };
+            
+            ws.onmessage = (ev) => {
+                try {
+                    const data = JSON.parse(ev.data);
+                    console.log('📨 Nhận:', data);
                     
-                    frameCount++;
-                    const nowFps = performance.now();
-                    if (nowFps - lastFpsTime >= 1000) { 
-                        fps = frameCount; 
-                        frameCount = 0; 
-                        lastFpsTime = nowFps; 
-                        infoBadge.innerText = `📡 ${fps} FPS | ⚡ ${latency}ms`; 
+                    if (data.type === 'auth_response') {
+                        isVerifying = false;
+                        if (data.success) {
+                            sessionId = data.session_id;
+                            isAuthenticated = true;
+                            pinLock.classList.add('hidden');
+                            showToast('✅ Xác thực thành công!');
+                            sendCommand('set_fps', { fps: targetFPS });
+                            currentPin = '';
+                            updatePinDots();
+                            updateDebug('✅ Đã xác thực');
+                        } else {
+                            showPinError('❌ ' + (data.message || 'Mã PIN không đúng'));
+                            currentPin = '';
+                            updatePinDots();
+                        }
+                        return;
                     }
                     
-                    if (loader.classList.contains('show')) loader.classList.remove('show');
-                } else if (data.type === 'status') {
-                    updateConnection(data.connected);
-                } else if (data.type === 'message_response') {
-                    if (data.success) {
-                        showToast(`✅ Tin nhắn đã được gửi đến hệ thống`);
+                    if (!isAuthenticated && data.type !== 'auth_response') return;
+                    
+                    if (data.type === 'pong') {
+                        latency = Date.now() - lastPingTime;
+                        latencyBar.innerText = '📶 ' + latency + 'ms';
+                        infoBadge.innerText = '📡 ' + fps + ' FPS | ⚡ ' + latency + 'ms';
+                        return;
+                    }
+                    
+                    if (data.type === 'screen') {
+                        if (data.data) screenImg.src = 'data:image/jpeg;base64,' + data.data;
+                        if (data.original_width) screenW = data.original_width;
+                        if (data.original_height) screenH = data.original_height;
+                        frameCount++;
+                        const nowFps = performance.now();
+                        if (nowFps - lastFpsTime >= 1000) {
+                            fps = frameCount;
+                            frameCount = 0;
+                            lastFpsTime = nowFps;
+                            infoBadge.innerText = '📡 ' + fps + ' FPS | ⚡ ' + latency + 'ms';
+                        }
+                        if (loader.classList.contains('show')) loader.classList.remove('show');
+                    } else if (data.type === 'status') {
+                        updateConnection(data.connected);
+                    } else if (data.type === 'message_response') {
+                        showToast(data.success ? '✅ Tin nhắn đã gửi' : '❌ Gửi thất bại');
+                    } else if (data.type === 'lock_response') {
+                        showToast(data.success ? '✅ Đã gửi lệnh khóa máy' : '❌ Gửi thất bại');
+                    } else if (data.type === 'unlock_response') {
+                        showToast(data.success ? '✅ Đã gửi lệnh mở khóa' : '❌ Gửi thất bại');
+                    }
+                } catch(e) { console.log(e); }
+            };
+            
+            ws.onclose = () => {
+                connecting = false;
+                isAuthenticated = false;
+                updateConnection(false);
+                updateDebug('❌ Mất kết nối, đang thử lại...');
+                if (reconnectTimer) clearTimeout(reconnectTimer);
+                reconnectTimer = setTimeout(() => connectWS(), 3000);
+            };
+            ws.onerror = () => { connecting = false; updateDebug('⚠️ Lỗi WebSocket'); };
+        }
+        
+        // ========== KHỞI TẠO UI ==========
+        function initUI() {
+            const savedName = localStorage.getItem('userName');
+            if (savedName) displayNameSpan.innerText = savedName;
+            
+            // Xử lý popup đổi tên
+            editNameBtn.onclick = () => {
+                newNameInput.value = displayNameSpan.innerText;
+                renamePopup.classList.add('open');
+            };
+            
+            cancelRename.onclick = () => {
+                renamePopup.classList.remove('open');
+            };
+            
+            saveRename.onclick = () => {
+                const newName = newNameInput.value.trim();
+                if (newName && newName.length > 0) {
+                    if (newName.length <= 30) {
+                        localStorage.setItem('userName', newName);
+                        displayNameSpan.innerText = newName;
+                        showToast('✅ Đã đổi tên thành: ' + newName);
+                        renamePopup.classList.remove('open');
                     } else {
-                        showToast(`❌ Gửi tin nhắn thất bại`);
+                        showToast('⚠️ Tên không được quá 30 ký tự');
                     }
+                } else {
+                    showToast('⚠️ Vui lòng nhập tên');
                 }
-            } catch(e) {
-                console.log('Parse error:', e);
-            }
-        };
+            };
+            
+            // Đóng popup khi nhấn Enter
+            newNameInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    saveRename.click();
+                }
+            });
+            
+            messageBtn.onclick = () => { 
+                messagePopup.classList.add('open'); 
+                senderNameInput.value = localStorage.getItem('userName') || ''; 
+            };
+            lockBtn.onclick = () => {
+                lockPopup.classList.add('open');
+                lockSenderName.value = localStorage.getItem('userName') || '';
+                lockPermanent.checked = false;
+                lockDurationGroup.style.display = 'block';
+                lockDuration.value = 5;
+            };
+            unlockBtn.onclick = () => {
+                unlockPopup.classList.add('open');
+                unlockSenderName.value = localStorage.getItem('userName') || '';
+                unlockNote.value = '';
+            };
+            document.getElementById('menuBtn').onclick = () => advOverlay.classList.add('open');
+            document.getElementById('keyboardBtn').onclick = () => kbdOverlay.classList.add('open');
+            document.getElementById('winKeyBtn').onclick = () => sendCommand('hotkey', { keys: ['win'] });
+            document.getElementById('zoomPlus').onclick = () => { zoom = Math.min(3, zoom + 0.2); screenImg.style.transform = 'scale(' + zoom + ')'; };
+            document.getElementById('zoomMinus').onclick = () => { zoom = Math.max(0.5, zoom - 0.2); screenImg.style.transform = 'scale(' + zoom + ')'; };
+            document.getElementById('resetZoom').onclick = () => { zoom = 1; screenImg.style.transform = 'scale(1)'; };
+            document.getElementById('closeAdv').onclick = () => advOverlay.classList.remove('open');
+            document.getElementById('closeKbd').onclick = () => kbdOverlay.classList.remove('open');
+            cancelMessage.onclick = () => messagePopup.classList.remove('open');
+            cancelLock.onclick = () => lockPopup.classList.remove('open');
+            cancelUnlock.onclick = () => unlockPopup.classList.remove('open');
+            cancelWeb.onclick = () => webPopup.classList.remove('open');
+            
+            sendMessageBtn.onclick = () => {
+                const msg = messageInput.value;
+                const name = senderNameInput.value;
+                if (msg && msg.trim() && name && name.trim()) {
+                    sendCommand('send_message', { message: msg.trim(), timestamp: Date.now(), sender: name.trim() });
+                    if (saveNameCheckbox.checked && name.trim()) {
+                        localStorage.setItem('userName', name.trim());
+                        displayNameSpan.innerText = name.trim();
+                    }
+                    messagePopup.classList.remove('open');
+                    showToast('✅ Đã gửi');
+                } else showToast('⚠️ Nhập đủ thông tin');
+            };
+            
+            sendLock.onclick = () => {
+                const name = lockSenderName.value;
+                const message = lockMessage.value;
+                const permanent = lockPermanent.checked;
+                let duration = permanent ? 0 : parseInt(lockDuration.value);
+                
+                if (!name || !name.trim()) {
+                    showToast('⚠️ Vui lòng nhập tên');
+                    return;
+                }
+                
+                if (!permanent && (isNaN(duration) || duration < 1)) {
+                    showToast('⚠️ Vui lòng nhập thời gian hợp lệ');
+                    return;
+                }
+                
+                sendCommand('lock_screen', {
+                    sender: name.trim(),
+                    message: message.trim() || 'Không có lý do',
+                    duration: duration,
+                    timestamp: Date.now()
+                });
+                
+                lockPopup.classList.remove('open');
+                showToast(permanent ? '🔒 Đã gửi lệnh khóa vĩnh viễn' : `🔒 Đã gửi lệnh khóa ${duration} phút`);
+            };
+            
+            sendUnlock.onclick = () => {
+                const name = unlockSenderName.value;
+                const note = unlockNote.value;
+                
+                if (!name || !name.trim()) {
+                    showToast('⚠️ Vui lòng nhập tên');
+                    return;
+                }
+                
+                sendCommand('unlock_screen', {
+                    sender: name.trim(),
+                    note: note.trim() || 'Không có ghi chú',
+                    timestamp: Date.now()
+                });
+                
+                unlockPopup.classList.remove('open');
+                showToast('🔓 Đã gửi lệnh mở khóa');
+            };
+            
+            sendWeb.onclick = () => {
+                let url = webUrl.value.trim();
+                
+                if (!url) {
+                    showToast('⚠️ Vui lòng nhập địa chỉ URL');
+                    return;
+                }
+                
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = 'https://' + url;
+                }
+                
+                sendCommand('open_url', {
+                    url: url,
+                    timestamp: Date.now()
+                });
+                
+                webPopup.classList.remove('open');
+                showToast(`🌐 Đã gửi lệnh mở: ${url}`);
+            };
+            
+            let expanded = false;
+            document.getElementById('drawerHandle').onclick = () => {
+                expanded = !expanded;
+                controlDrawer.classList.toggle('expanded', expanded);
+            };
+            
+            const quickFeat = [
+                {name:"📋 Sao chép",cmd:"ctrl+c"},{name:"📌 Dán",cmd:"ctrl+v"},{name:"✂️ Cắt",cmd:"ctrl+x"},
+                {name:"↩️ Hoàn tác",cmd:"ctrl+z"},{name:"✅ Chọn hết",cmd:"ctrl+a"},{name:"🖥️ Mở CMD",cmd:"cmd_special"},
+                {name:"🔄 Alt+Tab",cmd:"alt+tab"},{name:"🏠 Desktop",cmd:"win+d"},{name:"📁 Explorer",cmd:"win+e"},
+                {name:"⚙️ Run",cmd:"win+r"},{name:"🔁 F5",cmd:"f5"},{name:"❌ ESC",cmd:"esc"},
+                {name:"↵ Enter",cmd:"enter"},{name:"⊞ Win",cmd:"win"},{name:"💬 Tin nhắn",cmd:"message"},
+                {name:"🔒 Khóa máy",cmd:"lock"},{name:"🔓 Mở khóa",cmd:"unlock"},{name:"🌐 Mở web",cmd:"web"}
+            ];
+            const grid = document.getElementById('quickGrid');
+            grid.innerHTML = quickFeat.map(f => `<div class="feature-card" data-qcmd="${f.cmd}">${f.name}</div>`).join('');
+            document.querySelectorAll('[data-qcmd]').forEach(el => {
+                el.onclick = () => {
+                    const c = el.dataset.qcmd;
+                    if (c === 'cmd_special') {
+                        sendCommand('hotkey', { keys: ['win', 'r'] });
+                        setTimeout(() => sendCommand('key_type', { text: 'cmd' }), 80);
+                        setTimeout(() => sendCommand('key_press', { key: 'enter' }), 140);
+                    } else if (c === 'message') {
+                        messagePopup.classList.add('open');
+                    } else if (c === 'lock') {
+                        lockPopup.classList.add('open');
+                        lockSenderName.value = localStorage.getItem('userName') || '';
+                        lockPermanent.checked = false;
+                        lockDurationGroup.style.display = 'block';
+                        lockDuration.value = 5;
+                    } else if (c === 'unlock') {
+                        unlockPopup.classList.add('open');
+                        unlockSenderName.value = localStorage.getItem('userName') || '';
+                    } else if (c === 'web') {
+                        webPopup.classList.add('open');
+                        webUrl.value = 'https://';
+                    } else if (c === 'win') {
+                        sendCommand('hotkey', { keys: ['win'] });
+                    } else if (c.includes('+')) {
+                        sendCommand('hotkey', { keys: c.split('+') });
+                    } else {
+                        sendCommand('key_press', { key: c });
+                    }
+                };
+            });
+            
+            const superAdvanced = [
+                {name:"📋 Sao chép",cmd:"ctrl+c"},{name:"📌 Dán",cmd:"ctrl+v"},{name:"✂️ Cắt",cmd:"ctrl+x"},
+                {name:"↩️ Hoàn tác",cmd:"ctrl+z"},{name:"✅ Chọn hết",cmd:"ctrl+a"},{name:"🔁 Làm lại",cmd:"ctrl+y"},
+                {name:"💾 Lưu",cmd:"ctrl+s"},{name:"🔍 Tìm",cmd:"ctrl+f"},{name:"🔄 Alt+Tab",cmd:"alt+tab"},
+                {name:"❌ Đóng cửa sổ",cmd:"alt+f4"},{name:"🏠 Desktop",cmd:"win+d"},{name:"⚙️ Run",cmd:"win+r"},
+                {name:"📁 Explorer",cmd:"win+e"},{name:"💻 Mở CMD",cmd:"cmd_special"},{name:"📸 Chụp màn",cmd:"printscreen"},
+                {name:"🔁 F5",cmd:"f5"},{name:"🎬 F11",cmd:"f11"},{name:"💬 Gửi tin nhắn",cmd:"message"},
+                {name:"🔒 Khóa máy",cmd:"lock"},{name:"🔓 Mở khóa",cmd:"unlock"},{name:"🌐 Mở web",cmd:"web"},
+                {name:"❌ ESC",cmd:"esc"},{name:"↹ Tab",cmd:"tab"},{name:"⌫ Delete",cmd:"delete"},
+                {name:"⬆️ Lên",cmd:"up"},{name:"⬇️ Xuống",cmd:"down"},{name:"⬅️ Trái",cmd:"left"},
+                {name:"➡️ Phải",cmd:"right"},{name:"⏎ Enter",cmd:"enter"},{name:"␣ Space",cmd:"space"},
+                {name:"🔙 Backspace",cmd:"backspace"},{name:"⊞ Win",cmd:"win"}
+            ];
+            const superGrid = document.getElementById('superGrid');
+            superGrid.innerHTML = superAdvanced.map(f => `<div class="cmd-super" data-scmd="${f.cmd}">${f.name}</div>`).join('');
+            document.querySelectorAll('[data-scmd]').forEach(el => {
+                el.onclick = () => {
+                    const c = el.dataset.scmd;
+                    if (c === 'cmd_special') {
+                        sendCommand('hotkey', { keys: ['win', 'r'] });
+                        setTimeout(() => sendCommand('key_type', { text: 'cmd' }), 80);
+                        setTimeout(() => sendCommand('key_press', { key: 'enter' }), 140);
+                    } else if (c === 'message') {
+                        advOverlay.classList.remove('open');
+                        messagePopup.classList.add('open');
+                    } else if (c === 'lock') {
+                        advOverlay.classList.remove('open');
+                        lockPopup.classList.add('open');
+                        lockSenderName.value = localStorage.getItem('userName') || '';
+                        lockPermanent.checked = false;
+                        lockDurationGroup.style.display = 'block';
+                        lockDuration.value = 5;
+                    } else if (c === 'unlock') {
+                        advOverlay.classList.remove('open');
+                        unlockPopup.classList.add('open');
+                        unlockSenderName.value = localStorage.getItem('userName') || '';
+                    } else if (c === 'web') {
+                        advOverlay.classList.remove('open');
+                        webPopup.classList.add('open');
+                        webUrl.value = 'https://';
+                    } else if (c === 'win') {
+                        sendCommand('hotkey', { keys: ['win'] });
+                    } else if (c.includes('+')) {
+                        sendCommand('hotkey', { keys: c.split('+') });
+                    } else {
+                        sendCommand('key_press', { key: c });
+                    }
+                    advOverlay.classList.remove('open');
+                };
+            });
+            
+            const vkbKeys = ['q','w','e','r','t','y','u','i','o','p','a','s','d','f','g','h','j','k','l','z','x','c','v','b','n','m','1','2','3','4','5','6','7','8','9','0','␣','↵','⌫'];
+            const vkbGrid = document.getElementById('vkbGrid');
+            vkbGrid.innerHTML = vkbKeys.map(k => {
+                let display = k, val = k;
+                if (k === '␣') { display = 'Space'; val = 'space'; }
+                else if (k === '↵') { display = 'Enter'; val = 'enter'; }
+                else if (k === '⌫') { display = 'Del'; val = 'delete'; }
+                return `<div class="cmd-super" data-vk="${val}">${display}</div>`;
+            }).join('');
+            document.querySelectorAll('[data-vk]').forEach(el => {
+                el.onclick = () => {
+                    const v = el.dataset.vk;
+                    if (v === 'space' || v === 'enter' || v === 'delete' || v === 'tab' || v === 'esc') {
+                        sendCommand('key_press', { key: v });
+                    } else {
+                        sendCommand('key_type', { text: v });
+                    }
+                    kbdOverlay.classList.remove('open');
+                };
+            });
+            
+            fpsSlider.oninput = (e) => setTargetFPS(parseInt(e.target.value));
+            setTargetFPS(100);
+        }
         
-        ws.onclose = () => { 
-            connecting = false; 
-            updateConnection(false); 
-            if (reconnectTimer) clearTimeout(reconnectTimer); 
-            reconnectTimer = setTimeout(() => connectWS(), 3000);
-        };
+        createKeypad();
+        initUI();
+        bindScreenEvents();
+        connectWS();
         
-        ws.onerror = (e) => { 
-            console.log('WebSocket error:', e);
-            connecting = false; 
-        };
-    }
-
-    function initUI() {
-        document.getElementById('leftClick').onclick = () => clickAtSavedPosition('left');
-        document.getElementById('rightClick').onclick = () => clickAtSavedPosition('right');
-        document.getElementById('doubleClick').onclick = () => doubleClickAtSavedPosition();
-        messageBtn.onclick = openMessagePopup;
-        
-        document.getElementById('menuBtn').onclick = () => advOverlay.classList.add('open');
-        document.getElementById('keyboardBtn').onclick = () => kbdOverlay.classList.add('open');
-        document.getElementById('winKeyBtn').onclick = sendWinKey;
-        document.getElementById('zoomPlus').onclick = zoomIn;
-        document.getElementById('zoomMinus').onclick = zoomOut;
-        document.getElementById('resetZoom').onclick = resetZoomFunc;
-        document.getElementById('closeAdv').onclick = () => advOverlay.classList.remove('open');
-        document.getElementById('closeKbd').onclick = () => kbdOverlay.classList.remove('open');
-        
-        cancelMessage.onclick = closeMessagePopup;
-        sendMessageBtn.onclick = handleSendMessage;
-        editNameBtn.onclick = editName;
-        
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && messagePopup.classList.contains('open')) {
-                closeMessagePopup();
-            }
-        });
-        
-        messagePopup.addEventListener('click', (e) => {
-            if (e.target === messagePopup) {
-                closeMessagePopup();
-            }
-        });
-        
-        let drawerExpanded = false;
-        document.getElementById('drawerHandle').onclick = () => {
-            drawerExpanded = !drawerExpanded;
-            controlDrawer.classList.toggle('expanded', drawerExpanded);
-        };
-        
-        document.querySelectorAll('.mode-btn').forEach(btn => btn.onclick = () => setMode(btn.dataset.mode));
-        
-        screenImg.addEventListener('touchstart', onTouchStart, { passive: false });
-        screenImg.addEventListener('touchmove', onTouchMove, { passive: false });
-        screenImg.addEventListener('touchend', onTouchEnd, { passive: false });
-        screenImg.addEventListener('click', (e) => { if(currentMode === 'touch') handleMouseClick(e, 'left'); });
-        screenImg.addEventListener('contextmenu', (e) => { e.preventDefault(); handleMouseClick(e, 'right'); return false; });
-        screenImg.addEventListener('mousemove', handleMouseMove);
-        screenImg.addEventListener('mousedown', handleMouseDragStart);
-        screenImg.addEventListener('mouseup', handleMouseDragEnd);
-        screenImg.addEventListener('wheel', handleWheel, { passive: false });
-        
-        showToast('✅ Đã sẵn sàng | 💬 Nhấn nút Tin nhắn để gửi thông báo');
-    }
-
-    // Load saved name on startup
-    loadSavedName();
-    updateDisplayName();
-    
-    buildQuickGrid();
-    buildSuperGrid();
-    buildVKB();
-    initUI();
-    connectWS();
-    setMode('touch');
-    setTargetFPS(100);
+        console.log('✅ App đã khởi tạo - Hỗ trợ truy cập web từ xa');
+        updateDebug('✅ Sẵn sàng! Vui lòng nhập PIN để bắt đầu');
+    })();
 </script>
 </body>
 </html>
